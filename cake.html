@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Birthday Celebration 🎂</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: linear-gradient(45deg, #ffcad4, #ffd1e3, #e0c3fc, #bde0fe);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      font-family: 'Comic Sans MS', cursive;
+      overflow: hidden;
+      position: relative;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .heading {
+      font-size: 3.5rem;
+      color: #ff71b6;
+      text-shadow: 0 0 10px #ff9ecd, 0 0 20px #ffb7e0;
+      margin-bottom: 2rem; text-align: center;
+      animation: glow 2s ease-in-out infinite alternate;
+      z-index: 2;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff71b6; }
+      to   { text-shadow: 0 0 30px #ff71b6, 0 0 40px #ff9ecd; }
+    }
+      .next-page-button {
+         position: fixed;
+         bottom: 40px;
+         padding: 15px 40px;
+         font-size: 1.2rem;
+         background: linear-gradient(45deg, #ff9ecd, #ff71b6);
+         border: none;
+         border-radius: 25px;
+         color: white;
+         cursor: pointer;
+         opacity: 0;
+         transform: translateY(50px);
+         transition: all 0.3s ease;
+         box-shadow: 
+            0 0 15px rgba(255, 113, 182, 0.5),
+            0 0 30px rgba(255, 113, 182, 0.3);
+         font-family: 'Arial', sans-serif;
+         z-index: 1000;
+         display: flex;
+         align-items: center;
+         gap: 10px;
+        }
+    
+      .next-page-button::after {
+          content: '→';
+          font-size: 1.4rem;
+          transition: transform 0.3s ease;
+        }
+    
+      .next-page-button:hover {
+          transform: translateY(-3px) scale(1.05);
+          box-shadow: 
+              0 0 20px rgba(255, 113, 182, 0.6),
+              0 0 40px rgba(255, 113, 182, 0.4);
+          background: linear-gradient(45deg, #ffb7e0, #ff8ac7);
+        }
+    
+      .next-page-button:hover::after {
+          transform: translateX(5px);
+        }
+    
+      @keyframes pulse {
+          0%, 100% {
+              transform: scale(1);
+          }
+          50% {
+              transform: scale(1.05);
+          }
+        }
+    
+      .next-page-button.show {
+         opacity: 1;
+         transform: translateY(0);
+         animation: pulse 2s infinite;
+        }
+    
+    .cake-container { position: relative; width: 300px; height: 300px; display: flex; align-items: center; cursor: pointer; z-index: 3; }
+    .cake {
+      position: relative; width: 250px; height: 250px; transform-style: preserve-3d;
+      transform: perspective(1000px) rotateX(5deg); transition: transform 0.3s ease;
+    }
+    .cake:hover { transform: perspective(1000px) rotateX(5deg) scale(1.05); }
+    .layer { position: absolute; width: 100%; border-radius: 10px; box-shadow: 0 2px 15px rgba(0,0,0,0.2); display: flex; justify-content: center; }
+    .layer-1 { height: 80px; bottom: 0; width: 250px; background: linear-gradient(to right, #ff9ecd, #ff71b6); }
+    .layer-2 { height: 70px; bottom: 80px; width: 220px; left: 15px; background: linear-gradient(to right, #ffb7e0, #ff8ac7); }
+    .layer-3 { height: 60px; bottom: 150px; width: 190px; left: 30px; background: linear-gradient(to right, #ffc4e6, #ffa3d4); }
+    .frosting { position: absolute; width: 20px; height: 30px; background: white; border-radius: 50%; top: -15px; }
+    .candle { position: absolute; width: 20px; height: 60px; background: linear-gradient(to right, #fff, #ffd1e3);
+      top: -60px; left: 50%; transform: translateX(-50%); border-radius: 10px; z-index: 10; }
+    .flame { position: absolute; width: 20px; height: 30px; background: linear-gradient(to bottom, #ff9d00, #ff5e00);
+      border-radius: 50% 50% 20% 20%; top: -25px; animation: flicker 1s infinite; filter: drop-shadow(0 0 10px #ff9d00); }
+    @keyframes flicker { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.9); opacity: 0.8; } }
+    .ribbon {
+      position: fixed; width: 15px; height: 50px; top: -50px; border-radius: 5px;
+      animation: ribbonFall 5s linear forwards;
+    }
+    @keyframes ribbonFall {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(50vh) rotate(180deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
+    .gift {
+      position: fixed; bottom: 0; border-radius: 12px; display: flex;
+      justify-content: center; align-items: center; font-size: 30px; color: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .birthday-banner {
+      position: absolute; top: 5%; left: 50%; transform: translateX(-50%);
+      font-size: 3rem; font-weight: bold; color: #ff69b4; text-shadow: 2px 2px 10px #fff, 0 0 20px #ff9ecd; z-index: 1;
+    }
+    .bg-ribbon { position: absolute; top: 0; width: 10px; height: 100%; background: repeating-linear-gradient(
+      to bottom, #ff69b4, #ff69b4 20px, #ffffff 20px, #ffffff 40px); z-index: 0; opacity: 0.2; }
+    .bg-ribbon.left { left: 0; }
+    .bg-ribbon.right { right: 0; }
+    .tap-hint {
+      position: absolute; bottom: 20%; font-size: 1.5rem; background: rgba(255,255,255,0.8);
+      padding: 10px 20px; border-radius: 20px; color: #ff1493; font-weight: bold; z-index: 4;
+    }
+    .music-btn {
+      position: fixed; top: 20px; right: 20px; background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px); border-radius: 50%; padding: 10px; cursor: pointer;
+      font-size: 1.5rem; z-index: 999; transition: background 0.3s ease;
+    }
+    .music-btn:hover { background: rgba(255,255,255,0.3); }
+    .tiny-ribbon { width: 6px; height: 30px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div class="birthday-banner">🎉 HAPPY BIRTHDAY🎉</div>
+  <div class="bg-ribbon left"></div>
+  <div class="bg-ribbon right"></div>
+  <h1 class="heading">Let’s Cut the Cake! 🎂</h1>
+  <div class="tap-hint" id="tapHint">Tap the Cake to Cut 🎂✨</div>
+  <div class="name-hint" id="nameHint">ALEXA JI🥰✨</div>
+
+  <div class="cake-container">
+    <div class="cake">
+      <div class="layer layer-1">
+        <div class="frosting"></div><div class="frosting" style="left: 40px"></div><div class="frosting" style="right: 40px"></div>
+      </div>
+      <div class="layer layer-2">
+        <div class="frosting"></div><div class="frosting" style="left: 35px"></div><div class="frosting" style="right: 35px"></div>
+      </div>
+      <div class="layer layer-3">
+        <div class="frosting"></div><div class="frosting" style="left: 30px"></div><div class="frosting" style="right: 30px"></div>
+        <div class="candle"><div class="flame"></div></div>
+      </div>
+    </div>
+  </div>
+  <button class="next-page-button">Next Page</button>
+
+  <audio id="cakeMusic" loop>
+    <source src="happy_birthday_song.mp3" type="audio/mpeg" />
+  </audio>
+  <button id="musicBtn" class="music-btn"><span id="musicIcon">🎵</span></button>
+
+  <div id="giftsContainer"></div>
+
+  <script>
+    const cake = document.querySelector('.cake-container');
+    const candle = document.querySelector('.candle');
+    const cakeMusic = document.getElementById('cakeMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    const musicIcon = document.getElementById('musicIcon');
+    const giftsContainer = document.getElementById('giftsContainer');
+    const tapHint = document.getElementById('tapHint');
+    const banner = document.querySelector('.birthday-banner');
+
+    const ribbonColors = [
+      'linear-gradient(45deg, #FF9ECD, #FF71B6)',
+      'linear-gradient(45deg, #FFB7E0, #FF8AC7)',
+      'linear-gradient(45deg, #FFC4E6, #FFA3D4)',
+      'linear-gradient(45deg, #E0C3FC, #BDE0FE)',
+      'linear-gradient(45deg, #FFB199, #FF7A85)',
+      'linear-gradient(45deg, #D1C4E9, #B39DDB)',
+      'linear-gradient(45deg, #FFDEE9, #B5FFFC)'
+    ];
+    const lovingLines = [
+      "You light up my world 💖",
+      "Your smile is magic ✨",
+      "You’re my happy place 🫶",
+      "Forever my favorite 💝",
+      "You’re the reason 'beautiful' has meaning🌹✨",
+      "If caring was a face, it would look like you 🫶🥰"
+
+    ];
+
+    let isClicked = false;
+
+    musicBtn.addEventListener('click', () => {
+      if (cakeMusic.paused) { cakeMusic.play(); musicIcon.textContent = '🎵'; }
+      else { cakeMusic.pause(); musicIcon.textContent = '🔇'; }
+    });
+
+    function createRibbon() {
+      const ribbon = document.createElement('div');
+      ribbon.className = 'ribbon';
+      ribbon.style.left = `${Math.random() * window.innerWidth}px`;
+      ribbon.style.background = ribbonColors[Math.floor(Math.random() * ribbonColors.length)];
+      document.body.appendChild(ribbon);
+      ribbon.addEventListener('animationend', () => ribbon.remove());
+    }
+
+    function createGift() {
+      const gift = document.createElement('div');
+      gift.className = 'gift';
+      gift.textContent = ['🎁','✨','🎉','💝','🎀'][Math.floor(Math.random() * 5)];
+      gift.style.background = ribbonColors[Math.floor(Math.random() * ribbonColors.length)];
+      const size = Math.floor(Math.random() * 50) + 50;
+      gift.style.width = `${size}px`;
+      gift.style.height = `${size}px`;
+      gift.style.left = `${Math.random() * (window.innerWidth - size)}px`;
+      gift.style.bottom = Math.random() < 0.5 ? '0' : '50px';
+      giftsContainer.appendChild(gift);
+      gsap.to(gift, { y: -window.innerHeight + 100, duration: 6, ease: "power1.out", onComplete: () => gift.remove() });
+      if (Math.random() < 0.7) popLovingLine(gift);
+      if (Math.random() < 0.7) popGiftRibbons(gift);
+    }
+
+    function popLovingLine(gift) {
+      const line = document.createElement('div');
+      line.textContent = lovingLines[Math.floor(Math.random() * lovingLines.length)];
+      line.style.position = 'absolute'; line.style.bottom = '50%'; line.style.left = '50%';
+      line.style.transform = 'translate(-50%,0)'; line.style.fontSize = '20px'; line.style.background = '#fff';
+      line.style.padding = '6px 12px'; line.style.borderRadius = '8px'; line.style.color = '#ff69b4'; line.style.fontWeight = 'bold';
+      gift.appendChild(line);
+      gsap.to(line, { y: -40, opacity: 0, duration: 5, onComplete: () => line.remove() });
+    }
+
+    function popGiftRibbons(gift) {
+      for (let i = 0; i < 5; i++) {
+        const ribbon = document.createElement('div');
+        ribbon.className = 'tiny-ribbon';
+        ribbon.style.position = 'absolute'; ribbon.style.bottom = '50%'; ribbon.style.left = '50%';
+        ribbon.style.background = ribbonColors[Math.floor(Math.random() * ribbonColors.length)];
+        ribbon.style.transform = `translate(-50%,0) rotate(${Math.random()*360}deg)`;
+        gift.appendChild(ribbon);
+        gsap.to(ribbon, { y: -40 - Math.random()*40, opacity: 0, duration: 2, onComplete: () => ribbon.remove() });
+      }
+    }
+
+    cake.addEventListener('click', () => {
+      if (isClicked) return; isClicked = true;
+      cakeMusic.play().catch(()=>{});
+      tapHint.style.display = 'none';
+      banner.textContent = '🎉 HAPPY BIRTHDAY  🎉';
+      gsap.to(candle, { opacity: 0, y: -20, duration: 1, ease: "power2.out", onComplete: () => candle.remove() });
+      setInterval(createRibbon, 300); setInterval(createGift, 900);
+    });
+      // Show next page button after 2 seconds
+            setTimeout(() => {
+                const nextButton = document.querySelector('.next-page-button');
+                nextButton.classList.add('show');
+            }, 2000);
+
+            // Stop ribbon rain after 5 seconds
+            setTimeout(() => {
+                clearInterval(ribbonInterval);
+            }, 5000);
+
+        // Add button click handler
+        document.querySelector('.next-page-button').addEventListener('click', () => {
+            // You can replace this with your actual next page URL
+            window.location.href = 'celebrate.html';
+        });
+
+        cake.addEventListener('click', startCelebration);
+  </script>
+</body>
+</html>
